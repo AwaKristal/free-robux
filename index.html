@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador Oficial de Robux 2026</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #191a1d 0%, #2b2d33 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #232527;
+            border: 2px solid #393b3d;
+            border-radius: 16px;
+            padding: 30px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .robux-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #00b06f;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 10px;
+            box-shadow: 0 0 15px rgba(0, 176, 111, 0.5);
+            transform: rotate(45deg);
+        }
+
+        .robux-icon span {
+            transform: rotate(-45deg);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        p.subtitle {
+            color: #bdbebe;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            color: #bdbebe;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #4a4c4e;
+            background-color: #191a1d;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #00b06f;
+        }
+
+        .grid-amounts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .amount-card {
+            background-color: #2f3136;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 15px 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .amount-card:hover {
+            background-color: #383a40;
+            transform: translateY(-2px);
+        }
+
+        .amount-card.selected {
+            border-color: #00b06f;
+            background-color: rgba(0, 176, 111, 0.15);
+        }
+
+        .amount-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00e691;
+        }
+
+        .amount-tag {
+            font-size: 11px;
+            color: #bdbebe;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .btn-generate {
+            width: 100%;
+            padding: 15px;
+            background-color: #00b06f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-generate:hover {
+            background-color: #00945d;
+        }
+
+        /* Pantalla de carga */
+        .loading-screen, .result-screen {
+            display: none;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #191a1d;
+            border-radius: 10px;
+            height: 22px;
+            overflow: hidden;
+            margin: 20px 0 10px 0;
+            border: 1px solid #393b3d;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #00b06f, #00ff9d);
+            transition: width 0.3s ease;
+        }
+
+        .console-text {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            color: #00e691;
+            min-height: 20px;
+            margin-bottom: 15px;
+        }
+
+        /* Pantalla de resultado */
+        .code-box {
+            background-color: #111214;
+            border: 2px dashed #00b06f;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #00ff9d;
+            margin: 20px 0;
+            user-select: all;
+        }
+
+        .btn-copy {
+            background-color: #393b3d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .btn-copy:hover {
+            background-color: #4f5254;
+        }
+
+        .disclaimer {
+            margin-top: 25px;
+            font-size: 11px;
+            color: #6c6e70;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <div class="robux-icon"><span>R$</span></div>
+            <h1>Generador de Robux</h1>
+            <p class="subtitle">Servidor Privado v4.2 - Sin verificación</p>
+        </div>
+
+        <!-- PASO 1: SELECCIÓN -->
+        <div id="step-select">
+            <div class="input-group">
+                <label for="username">Usuario de Roblox:</label>
+                <input type="text" id="username" placeholder="Ej. ProGamer777" autocomplete="off">
+            </div>
+
+            <label style="text-align: left;">Selecciona la cantidad de Robux:</label>
+            <div class="grid-amounts">
+                <div class="amount-card selected" onclick="selectAmount(this, '999,999')">
+                    <div class="amount-value">999,999 R$</div>
+                    <span class="amount-tag">Paquete Inicial</span>
+                </div>
+                <div class="amount-card" onclick="selectAmount(this, '5,000,000')">
+                    <div class="amount-value">5,000,000 R$</div>
+                    <span class="amount-tag">Más Popular</span>
+                </div>
+                <div class="amount-card" onclick="selectAmount(this, '69,420,000')">
+                    <div class="amount-value">69,420,000 R$</div>
+                    <span class="amount-tag">Edición Meme</span>
+                </div>
+                <div class="amount-card" onclick="selectAmount(this, '∞ Infinito')">
+                    <div class="amount-value">∞ Infinito</div>
+                    <span class="amount-tag">Modo Admin</span>
+                </div>
+            </div>
+
+            <button class="btn-generate" onclick="startGeneration()">GENERAR AHORA</button>
+        </div>
+
+        <!-- PASO 2: CARGA -->
+        <div id="step-loading" class="loading-screen">
+            <h3 id="loading-title">Conectando al servidor...</h3>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <p class="console-text" id="console-text">Iniciando protocolo...</p>
+        </div>
+
+        <!-- PASO 3: CÓDIGO GENERADO -->
+        <div id="step-result" class="result-screen">
+            <h2 style="color: #00e691;">¡Generación Completada!</h2>
+            <p class="subtitle" id="result-user-msg" style="margin-top: 8px;"></p>
+            
+            <div class="code-box" id="gift-code">XXXX-XXXX-XXXX-XXXX</div>
+            
+            <button class="btn-copy" onclick="copyCode()" id="copy-btn">Copiar Código</button>
+            <br>
+            <button class="btn-generate" onclick="resetGenerator()" style="background-color: #393b3d; font-size: 14px; padding: 10px;">Generar otro</button>
+        </div>
+
+        <div class="disclaimer">
+            * Esta página es 100% una broma / parodia. No genera Robux reales ni está afiliada con Roblox Corporation.
+        </div>
+    </div>
+
+    <script>
+        let selectedAmount = '999,999';
+
+        function selectAmount(element, amount) {
+            document.querySelectorAll('.amount-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            selectedAmount = amount;
+        }
+
+        function generateRandomCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let sections = [];
+            for (let s = 0; s < 4; s++) {
+                let part = '';
+                for (let i = 0; i < 4; i++) {
+                    part += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                sections.push(part);
+            }
+            return sections.join('-');
+        }
+
+        function startGeneration() {
+            const username = document.getElementById('username').value.trim();
+            if (!username) {
+                alert('¡Escribe un nombre de usuario primero!');
+                return;
+            }
+
+            document.getElementById('step-select').style.display = 'none';
+            document.getElementById('step-loading').style.display = 'block';
+
+            const progressBar = document.getElementById('progress-bar');
+            const consoleText = document.getElementById('console-text');
+            const loadingTitle = document.getElementById('loading-title');
+
+            const messages = [
+                { pct: 15, text: `Buscando usuario "${username}" en la base de datos...` },
+                { pct: 35, text: 'Usuario encontrado. Saltando firewall de seguridad...' },
+                { pct: 55, text: `Inyectando ${selectedAmount} R$ en el paquete...` },
+                { pct: 75, text: 'Generando código de tarjeta de regalo (Gift Card)...' },
+                { pct: 90, text: 'Encriptando transacción para evitar baneo...' },
+                { pct: 100, text: '¡Listo!' }
+            ];
+
+            let step = 0;
+            loadingTitle.innerText = 'Generando ROBUX...';
+
+            const interval = setInterval(() => {
+                if (step < messages.length) {
+                    progressBar.style.width = messages[step].pct + '%';
+                    consoleText.innerText = messages[step].text;
+                    step++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        showResult(username);
+                    }, 600);
+                }
+            }, 900);
+        }
+
+        function showResult(username) {
+            document.getElementById('step-loading').style.display = 'none';
+            document.getElementById('step-result').style.display = 'block';
+
+            document.getElementById('result-user-msg').innerText = 
+                `Canjea este código en tu cuenta (${username}) para recibir tus ${selectedAmount} R$:`;
+            
+            document.getElementById('gift-code').innerText = generateRandomCode();
+        }
+
+        function copyCode() {
+            const code = document.getElementById('gift-code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.getElementById('copy-btn');
+                btn.innerText = '¡Copiado!';
+                setTimeout(() => {
+                    btn.innerText = 'Copiar Código';
+                }, 2000);
+            });
+        }
+
+        function resetGenerator() {
+            document.getElementById('step-result').style.display = 'none';
+            document.getElementById('step-select').style.display = 'block';
+            document.getElementById('progress-bar').style.width = '0%';
+        }
+    </script>
+</body>
+</html>
